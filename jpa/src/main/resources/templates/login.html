@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>登陆</title>
+</head>
+<body>
+<div id="waper">
+    <div id="main">
+        <table>
+            <tr>
+                <td>用户名：</td>
+                <td><input id="name" placeholder="用户名或邮箱"/></td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td><input id="pwd" placeholder="请输入密码"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="login">登陆</button>
+                    <input type="hidden" id="requestUrl" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
+<script>
+    window.onload = function () {
+        let name = $("#name").val();
+        let pwd = $("#pwd").val();
+        let requestUrl = $("#requestUrl").val();
+        $(document).on("click", "#login", function () {
+            $.ajax({
+                url: "/login",
+                data: {
+                    name: name,
+                    pwd: pwd,
+                    requestUrl:requestUrl
+                },
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = "/index";
+                    } else {
+                        alert("fail");
+                    }
+                }
+            })
+        });
+    };
+</script>
+</body>
+</html>
