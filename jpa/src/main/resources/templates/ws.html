@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>消息</title>
+    <script th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
+    <script th:src="@{https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.js}"></script>
+    <script th:src="@{https://unpkg.com/stompjs@2.3.3/lib/stomp.js}"></script>
+</head>
+<body>
+<div id="waper">
+    <div id="main">
+        <table>
+            <tr>
+                <td>消息：</td>
+                <td>
+                    <textarea id="msg" placeholder=""></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>发送的消息：</td>
+                <td>
+                    <textarea id="sendMsg" placeholder="发送的消息"></textarea>
+                </td>
+                <td>
+                    <button id="send">发送</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="connect">连接</button>
+                </td>
+                <td>
+                    <button id="disconnect">断开</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        var stompClient = null;
+        let sendMsg = $("#sendMsg");
+         // 连接，断开时页面元素的控制
+        function setConnect(connect) {
+            $("#connect").attr("disabled", connect);
+            $("#disconnect").attr("disabled", !connect);
+            $("#msg").html('');
+        }
+
+        // 接收，发送消息
+        function showMsg(msg){
+            $("#msg").append(msg);
+        }
+
+        // 连接方法
+        $("#connect").click(function(){
+            let socket = new SockJS("http://localhost:8080/wsEndPoint");
+            stompClient = Stomp.over(socket);
+            // 连接并订阅 /topic/wechat
+            stompClient.connect({}, function(frame){
+                console.log(frame);
+                setConnect(true);
+                stompClient.subscribe('/topic/wechat', function(res){
+                    showMsg(JSON.parse(res.body));
+                })
+            });
+        });
+
+        // 断开连接
+        $("#disconnect").click(function(){
+            if(stompClient != null){
+                stompClient.disconnect();
+            }
+            setConnect(false);
+        });
+
+        // 消息发送
+        $("#send").click(function(){
+            let sm = sendMsg.val();
+            stompClient.send('/send', {}, JSON.stringify({msg: sm}));
+            showMsg("me: " + sm);
+            sendMsg.val('');
+        });
+    });
+</script>
+</body>
+</html>

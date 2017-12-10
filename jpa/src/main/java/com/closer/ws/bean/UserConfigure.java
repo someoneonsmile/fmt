@@ -9,8 +9,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "closer.site")
 public class UserConfigure {
 
-    private Integer tokenTimeout;
+    private long tokenTimeout;
     private String tokenName;
     private String tokenServersName;
     private String tokenPrefix;
+    private String authCodePrefix;
+    private long authCodeTimeout;
 }
