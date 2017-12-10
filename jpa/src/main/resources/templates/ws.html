@@ -14,7 +14,7 @@
             <tr>
                 <td>消息：</td>
                 <td>
-                    <textarea id="msg" placeholder=""></textarea>
+                    <textarea id="msg" readonly="readonly"></textarea>
                 </td>
             </tr>
             <tr>
@@ -51,7 +51,8 @@
 
         // 接收，发送消息
         function showMsg(msg){
-            $("#msg").append(msg);
+            let temp = $("#msg").html();
+            $("#msg").html(temp + '<br/>' + msg);
         }
 
         // 连接方法
@@ -60,11 +61,15 @@
             stompClient = Stomp.over(socket);
             // 连接并订阅 /topic/wechat
             stompClient.connect({}, function(frame){
-                console.log(frame);
                 setConnect(true);
+
                 stompClient.subscribe('/topic/wechat', function(res){
-                    showMsg(JSON.parse(res.body));
-                })
+                    showMsg(res.body);
+                });
+
+                stompClient.subscribe('/user/queue/wechat', function(res){
+                    showMsg(res.body);
+                });
             });
         });
 
@@ -79,7 +84,7 @@
         // 消息发送
         $("#send").click(function(){
             let sm = sendMsg.val();
-            stompClient.send('/send', {}, JSON.stringify({msg: sm}));
+            stompClient.send('/app/sendToUser', {}, JSON.stringify({msg: sm}));
             showMsg("me: " + sm);
             sendMsg.val('');
         });

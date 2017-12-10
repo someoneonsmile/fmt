@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-public class IndexController extends BaseController{
+public class WelController extends BaseController{
 
     /**
      * ws 连接测试页
