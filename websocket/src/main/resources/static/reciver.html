@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>公告</title>
+    <script src="js/jquery-3.2.1.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
+    <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.js"></script>
+</head>
+<body>
+<div class="message">
+    <span class="content"></span>
+</div>
+<script>
+    window.onload = function(){
+        noticeSocket();
+    };
+
+    var noticeSocket = function () {
+        var s = new SockJS('/socket');
+        var stompClient = Stomp.over(s);
+        stompClient.connect({}, function () {
+            console.log('notice socket connected!');
+            stompClient.subscribe('/topic/notice', function (data) {
+                $('.message span.content').html(data.body);
+            });
+        });
+    };
+
+</script>
+</body>
+</html>

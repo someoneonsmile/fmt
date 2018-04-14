@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>聊天室</title>
+</head>
+<body>
+    <div id="wc">
+    </div>
+    <input type="text" id="context"/>
+    <input type="button" id="send" onclick="send()" value="发送"/>
+    <script>
+        ws = new WebSocket("ws://localhost:8089/socket");
+        ws.onopen = function(event){
+            console.log(event);
+        };
+        ws.onmessage = function(event){
+            document.getElementById("wc").innerHTML = event.data;
+        };
+
+        send = () => {
+            let context = document.getElementById("context").value;
+            ws.send(context);
+        }
+
+    </script>
+</body>
+</html>
