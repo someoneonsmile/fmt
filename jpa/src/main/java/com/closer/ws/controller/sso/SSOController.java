@@ -13,7 +13,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +77,7 @@ public class SSOController extends BaseController {
         }
 
         // 已登陆，从缓存中取 authCode 没有时生成并保存
-        session.setMaxInactiveInterval((int)(userConfigure.getTokenTimeout() * 60 * 60));
+        session.setMaxInactiveInterval((int) (userConfigure.getTokenTimeout() * 60 * 60));
         ValueOperations<Serializable, Object> opsForValue = redisTemplate.opsForValue();
         String authCode = (String) opsForValue.get(userConfigure.getAuthCodePrefix() + callbackUrl);
         if (authCode == null) {
@@ -92,18 +90,18 @@ public class SSOController extends BaseController {
     /**
      * 获取令牌
      */
-    public ResData<Map> getToken(String authCode){
+    public ResData<Map> getToken(String authCode) {
 
         String requestUrl = request.getRequestURL().toString();
         ValueOperations<Serializable, Object> ops = redisTemplate.opsForValue();
-        if(authCode==null||!authCode.equals(ops.get(userConfigure.getAuthCodePrefix()+requestUrl))){
-            return new ResData<Map>(false, 500, "authCode 失效", null);
+        if (authCode == null || !authCode.equals(ops.get(userConfigure.getAuthCodePrefix() + requestUrl))) {
+            return ResData.custom(false, 500, "authCode 失效", null);
         }
         Map<String, Object> ret = new HashMap<>();
         String token = UUIDUtils.getUUID();
-        ops.set(userConfigure.getTokenPrefix()+requestUrl, token, userConfigure.getTokenTimeout(), TimeUnit.HOURS);
+        ops.set(userConfigure.getTokenPrefix() + requestUrl, token, userConfigure.getTokenTimeout(), TimeUnit.HOURS);
         ret.put("token", token);
-        SysUser loginUser = (SysUser)session.getAttribute("loginUser");
+        SysUser loginUser = (SysUser) session.getAttribute("loginUser");
         ret.put("openId", loginUser.getId());
         ResData<Map> success = ResData.success();
         success.setData(ret);
@@ -122,7 +120,7 @@ public class SSOController extends BaseController {
          */
         String requestUrl = request.getRequestURL().toString();
         ValueOperations<Serializable, Object> ops = redisTemplate.opsForValue();
-        return token != null && token.equals(ops.get(userConfigure.getTokenPrefix()+requestUrl));
+        return token != null && token.equals(ops.get(userConfigure.getTokenPrefix() + requestUrl));
     }
 
     /**
@@ -175,6 +173,6 @@ public class SSOController extends BaseController {
             success.setData(loginUser);
             return success;
         }
-        return new ResData<>(false, 500, "token not effective!", null);
+        return ResData.custom(false, 500, "token not effective!", null);
     }
 }
