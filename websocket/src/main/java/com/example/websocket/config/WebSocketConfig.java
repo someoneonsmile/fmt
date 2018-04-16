@@ -1,4 +1,4 @@
-package com.example.websocket.websocket.config;
+package com.example.websocket.config;
 
 import com.sun.istack.internal.Nullable;
 import lombok.extern.slf4j.Slf4j;
