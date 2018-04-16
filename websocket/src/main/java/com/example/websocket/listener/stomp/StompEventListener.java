@@ -1,4 +1,4 @@
-package com.example.websocket.websocket.listener.stomp;
+package com.example.websocket.listener.stomp;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
