@@ -20,6 +20,8 @@ package com.closer.ws.common;
  */
 public class Single {
 
+    private Single(){ }
+
     public static Inner success() {
         return Inner.success;
     }
@@ -31,7 +33,7 @@ public class Single {
     /**
      * 静态内部枚举
      */
-    public static enum Inner {
+    private enum Inner {
         success(true, 200, "success", null),
         fail(false, 500, "fail", null);
         private boolean suc;
