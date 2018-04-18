@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/game/{nickname}")
 @Component
 public class GoBangGame {
-    private static final Set<GoBangGame> GO_BANG_GAME_SET = new CopyOnWriteArraySet<GoBangGame>();
+    private static final Set<GoBangGame> GO_BANG_GAME_SET = new CopyOnWriteArraySet<>();
     private Session session;
     private String nickname;
     private static String lastUser;
