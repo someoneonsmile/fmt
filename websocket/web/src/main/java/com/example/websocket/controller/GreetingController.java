@@ -1,5 +1,6 @@
 package com.example.websocket.controller;
 
+import com.example.websocket.properties.CustomProperties;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,9 +16,14 @@ public class GreetingController {
     @Resource
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Resource
+    private CustomProperties customProperties;
 
     @RequestMapping( {"/", "/index", "/main"} )
     public String index() {
+        System.out.println(customProperties.getName());
+        System.out.println(customProperties.getRandomInt());
+        System.out.println(customProperties.getRandomString());
         return "/reciver.html";
     }
 

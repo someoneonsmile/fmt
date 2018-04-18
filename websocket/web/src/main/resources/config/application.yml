@@ -1,0 +1,31 @@
+
+# server
+server:
+  port: 8089
+  servlet:
+    application-display-name: wechat
+    context-path: /${custom.context-path}
+
+# log
+logging:
+  path: logs
+  config: classpath:config/logback-spring.xml
+
+
+spring:
+
+  # banner
+  banner:
+    image:
+      location: classpath:banner/banner.png
+    location: classpath:banner/banner.txt
+
+  # thymeleaf
+  thymeleaf:
+    cache: false
+
+  # 默认环境配置
+  profiles:
+    active: dev
+
+
