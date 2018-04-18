@@ -1,6 +1,5 @@
 package com.example.websocket.config;
 
-import com.sun.istack.internal.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -68,7 +67,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                      * 建立 WebSocket 连接之后
                      */
                     @Override
-                    public void afterConnectionEstablished( @Nullable final WebSocketSession session ) throws Exception {
+                    public void afterConnectionEstablished( final WebSocketSession session ) throws Exception {
                         log.info("afterConnectionEstablished");
                         if ( session == null ) {
                             throw new RuntimeException("session is null");
@@ -89,7 +88,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                      * 关闭 WebSocket 连接之后
                      */
                     @Override
-                    public void afterConnectionClosed( @Nullable WebSocketSession session, @Nullable CloseStatus closeStatus ) throws Exception {
+                    public void afterConnectionClosed( WebSocketSession session, CloseStatus closeStatus ) throws Exception {
                         log.info("afterConnectionClosed");
                         if ( session == null || closeStatus == null ) {
                             throw new RuntimeException("session isnull or closeStatus is null");
