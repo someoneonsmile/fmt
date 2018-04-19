@@ -8,18 +8,17 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
-
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints( StompEndpointRegistry registry ) {
@@ -41,7 +40,6 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
             .maxPoolSize(8)  // 最大线程数
             .keepAliveSeconds(60) // 线程活动时间
             .queueCapacity(512); // 等待线程数
-        super.configureClientInboundChannel(registration);
     }
 
 
@@ -125,6 +123,5 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                 };
             }
         });
-        super.configureWebSocketTransport(registration);
     }
 }
