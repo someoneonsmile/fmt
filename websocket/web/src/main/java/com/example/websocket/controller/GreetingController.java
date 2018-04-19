@@ -24,25 +24,25 @@ public class GreetingController {
         System.out.println(customProperties.getName());
         System.out.println(customProperties.getRandomInt());
         System.out.println(customProperties.getRandomString());
-        return "/reciver.html";
+        return "reciver.html";
     }
 
 
     @RequestMapping( {"/re"} )
     public String re() {
-        return "/reciver.html";
+        return "reciver.html";
     }
 
 
     @RequestMapping( "/we" )
     public String we() {
-        return "/wechat.html";
+        return "wechat.html";
     }
 
 
     @RequestMapping( "/send" )
     public String send() {
-        return "/sender.html";
+        return "sender.html";
     }
 
 

@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SysUserDao extends CrudRepository<SysUser, Long>, QueryDslPredicateExecutor<SysUser> {
 
-
-
 }

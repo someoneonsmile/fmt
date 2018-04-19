@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>五子棋大战</title>
-    <script src="webjars/jquery/dist/jquery.main.js"></script>
+    <script th:src="@{webjars/jquery/dist/jquery.main.js}"></script>
     <style>
         tr {  height: 40px;  }
         td {  width: 39px;  }
@@ -19,7 +19,7 @@
 <div align="center">
     <div id="msgDiv"><input type="text" id="nickname" placeholder="请输入昵称"><input type="button" value="连接" id="connBtn">
     </div>
-    <div style="background:url('./img/bg.png') no-repeat 0 0;width: 1081px;height: 610px;padding-top:5px;margin-top: 15px;display: none"
+    <div style="background:url('../static/img/bg.png') no-repeat 0 0;width: 1081px;height: 610px;padding-top:5px;margin-top: 15px;display: none"
          id="gameDiv"></div>
 </div>
 <script>
@@ -57,9 +57,9 @@
                     var x = splitArr[0];
                     var y = splitArr[1];
                     if (splitArr[2] == 0) {
-                        $("#gameTable tr:eq('" + y + "') td:eq('" + x + "')").html("<div style='margin-top: -30px;margin-left: -11px;'><img src='img/white.png'/></div>");
+                        $("#gameTable tr:eq('" + y + "') td:eq('" + x + "')").html("<div style='margin-top: -30px;margin-left: -11px;'><img src='../static/img/white.png'/></div>");
                     } else {
-                        $("#gameTable tr:eq('" + y+ "') td:eq('" +x+ "')").html("<div style='margin-top: -30px;margin-left: -11px;'><img src='img/black.png'/></div>");
+                        $("#gameTable tr:eq('" + y+ "') td:eq('" +x+ "')").html("<div style='margin-top: -30px;margin-left: -11px;'><img src='../static/img/black.png'/></div>");
                     }
                 } else {
                     $("#msgDiv").html(event.data);

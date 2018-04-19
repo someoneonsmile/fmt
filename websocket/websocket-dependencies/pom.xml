@@ -15,12 +15,13 @@
 
     <!--版本号统一定义, 命名建议 "artifactId.version"-->
     <properties>
-
         <entity.version>0.0.1-SNAPSHOT</entity.version>
+        <fastjson.version>1.2.47</fastjson.version>
         <jquery.version>3.2.1</jquery.version>
         <sockjs-client.version>1.1.4</sockjs-client.version>
         <stomp-websocket.version>2.3.4</stomp-websocket.version>
         <webjars-locator.version>0.34</webjars-locator.version>
+        <mybatis-plus.version>2.2.0</mybatis-plus.version>
     </properties>
 
     <!--传递依赖, 不建议使用-->
@@ -40,11 +41,23 @@
                 <version>${entity.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
             <!--webjars-->
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>webjars-locator</artifactId>
                 <version>${webjars-locator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
 
             <dependency>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>发送公告</title>
-    <script src="webjars/sockjs-client/dist/sockjs.min.js"></script>
-    <script src="webjars/stomp-websocket/lib/stomp.min.js"></script>
+    <script th:src="@{webjars/sockjs-client/dist/sockjs.min.js}"></script>
+    <script th:src="@{webjars/stomp-websocket/lib/stomp.min.js}"></script>
 </head>
 <body>
 <div>

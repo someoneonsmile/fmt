@@ -14,6 +14,29 @@ logging:
 
 spring:
 
+  # thymeleaf
+  thymeleaf:
+    mode: html5
+    encoding: utf-8
+    servlet:
+      content-type: text/html
+
+  # 静态资源配置
+  resources:
+    chain:
+      strategy:
+        # MD5 版本策略
+        content:
+          enabled: true
+          paths: /**
+      # gzip 压缩
+      gzipped: true
+      # 启用缓存
+      cache: true
+
+    cache:
+      period: 6H
+
   # banner
   banner:
     image:
