@@ -14,11 +14,18 @@
     <packaging>jar</packaging>
 
     <dependencies>
+
+        <!--实体类-->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>entity</artifactId>
+        </dependency>
+
+        <!--websocket-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-
 
         <!--webjars-->
         <dependency>
@@ -49,5 +56,19 @@
         </dependency>
 
     </dependencies>
+
+
+    <!--插件-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
