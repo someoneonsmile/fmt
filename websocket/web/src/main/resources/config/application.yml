@@ -11,7 +11,6 @@ logging:
   path: logs
   config: classpath:config/logback-spring.xml
 
-
 spring:
 
   # thymeleaf
@@ -39,8 +38,6 @@ spring:
 
   # banner
   banner:
-    image:
-      location: classpath:banner/banner.png
     location: classpath:banner/banner.txt
 
   # thymeleaf

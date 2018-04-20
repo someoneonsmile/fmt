@@ -2,19 +2,9 @@
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 
     <contextName>logback</contextName>
+
     <!--导入 spring boot 默认配置-->
     <include resource="org/springframework/boot/logging/logback/base.xml" />
-    <!--输出到文件-->
-    <!--<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <!--<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
-            <!--<fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
-            <!--<maxHistory>30</maxHistory>-->
-            <!--<maxFileSize>10MB</maxFileSize>-->
-        <!--</rollingPolicy>-->
-        <!--<encoder>-->
-            <!--<pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-        <!--</encoder>-->
-    <!--</appender>-->
 
     <!-- 异步输出 -->
     <appender name ="ASYNC" class= "ch.qos.logback.classic.AsyncAppender">
@@ -26,32 +16,35 @@
         <appender-ref ref ="FILE"/>
     </appender>
 
-    <root level="info">
+    <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
+    <springProfile name="dev,test">
+        <property name="ROOT_LOG_LEVEL" value="INFO"/>
+        <property name="SQL_LOG_LEVEL" value="INFO"/>
+    </springProfile>
+
+    <!-- 生产环境. -->
+    <springProfile name="prod">
+        <property name="ROOT_LOG_LEVEL" value="INFO"/>
+        <property name="SQL_LOG_LEVEL" value="INFO"/>
+    </springProfile>
+
+    <!--spring 日志-->
+    <logger name="org.springframework" level="INFO"/>
+
+    <!--sql 日志-->
+    <logger name="org.apache.ibatis" level="${SQL_LOG_LEVEL}"/>
+    <logger name="java.sql" level="${SQL_LOG_LEVEL}"/>
+
+    <!--root 日志-->
+    <root level="${ROOT_LOG_LEVEL}">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
         <appender-ref ref="ASYNC"/>
     </root>
 
-    <!--将控制controller包下的所有类的日志的打印，但是并没用设置打印级别，所以继承他的上级的日志级别 info -->
-    <!--没有设置addtivity，默认为true，将此logger的打印信息向上级传递；-->
-    <!--没有设置appender，此logger本身不打印任何信息。-->
-    <!--<logger name="com.example.websocket.controller"/>-->
-
-    <!--<logger>用来设置某一个包或者具体的某一个类的日志打印级别、以及指定<appender>-->
-    <!--additivity: 是否向上级 logger 传递打印信息. 默认为 true-->
-    <!--<logger name="com.example" level="info" additivity="false">-->
-    <!--<appender-ref ref="console"/>-->
-    <!--</logger>-->
-
-    <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
-    <springProfile name="dev,test">
-        <logger name="org.apache.ibatis" level="debug" />
-        <logger name="java.sql" level="debug" />
-    </springProfile>
-    <!-- 生产环境. -->
-    <springProfile name="prod">
-        <logger name="org.apache.ibatis" level="error" />
-        <logger name="java.sql" level="error" />
-    </springProfile>
+    <!--排除 日志-->
+    <logger name="sun.rmi" level="ERROR"/>
+    <logger name="org.apache.tomcat" level="ERROR"/>
+    <logger name="org.apache.catalina" level="ERROR"/>
+    <logger name="org.hibernate.validator.internal" level="ERROR"/>
 
 </configuration>

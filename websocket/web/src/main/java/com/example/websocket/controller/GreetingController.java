@@ -1,15 +1,18 @@
 package com.example.websocket.controller;
 
 import com.example.websocket.properties.CustomProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
+@Slf4j
 @Controller
 public class GreetingController {
 
@@ -20,11 +23,14 @@ public class GreetingController {
     private CustomProperties customProperties;
 
     @RequestMapping( {"/", "/index", "/main"} )
-    public String index() {
+    @ResponseBody
+    public void index() {
         System.out.println(customProperties.getName());
         System.out.println(customProperties.getRandomInt());
         System.out.println(customProperties.getRandomString());
-        return "reciver.html";
+        log.error("error");
+        log.info("info");
+        log.debug("debug");
     }
 
 
