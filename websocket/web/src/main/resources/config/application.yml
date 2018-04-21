@@ -15,6 +15,7 @@ spring:
 
   # thymeleaf
   thymeleaf:
+    cache: false
     mode: html5
     encoding: utf-8
     servlet:
@@ -39,10 +40,6 @@ spring:
   # banner
   banner:
     location: classpath:banner/banner.txt
-
-  # thymeleaf
-  thymeleaf:
-    cache: false
 
   # 默认环境配置
   profiles:
