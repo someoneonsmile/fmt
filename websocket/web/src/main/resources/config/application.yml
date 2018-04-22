@@ -16,7 +16,7 @@ spring:
   # thymeleaf
   thymeleaf:
     cache: false
-    mode: html5
+    mode: html
     encoding: utf-8
     servlet:
       content-type: text/html
