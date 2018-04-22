@@ -18,7 +18,7 @@ public class ExceptionHandlerController {
     @ResponseStatus( HttpStatus.NOT_FOUND )
     public String processNullPointException( HttpServletRequest request, NullPointerException e ) {
         System.out.println("===应用到所有 @RequestMapping 注解的方法，在其抛出 NullPointerException 异常时执行");
-        return "index"; //返回一个逻辑视图名
+        return "/error/404.html"; //返回一个逻辑视图名
     }
 
 
@@ -26,6 +26,6 @@ public class ExceptionHandlerController {
     @ResponseStatus( HttpStatus.UNAUTHORIZED )
     public String processUnauthenticatedException( NativeWebRequest request, Exception e ) {
         System.out.println("===应用到所有 @RequestMapping 注解的方法，在其抛出 Exception 异常时执行");
-        return "index"; //返回一个逻辑视图名
+        return "/error/5xx.html"; //返回一个逻辑视图名
     }
 }

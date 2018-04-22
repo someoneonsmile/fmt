@@ -24,11 +24,11 @@ public class GreetingController {
 
     @RequestMapping( {"/", "/index", "/main"} )
     @ResponseBody
-    public void index() {
+    public void index() throws Exception {
         System.out.println(customProperties.getName());
         System.out.println(customProperties.getRandomInt());
         System.out.println(customProperties.getRandomString());
-        log.error("error");
+        log.error("templates/error");
         log.info("info");
         log.debug("debug");
     }

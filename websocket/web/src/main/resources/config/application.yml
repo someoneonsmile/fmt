@@ -8,7 +8,7 @@ server:
 
 # log
 logging:
-  path: logs
+  path: ${user.home}/logs
   config: classpath:config/logback-spring.xml
 
 spring:
@@ -32,7 +32,7 @@ spring:
       # gzip 压缩
       gzipped: true
       # 启用缓存
-      cache: true
+      cache: false
 
     cache:
       period: 6H
