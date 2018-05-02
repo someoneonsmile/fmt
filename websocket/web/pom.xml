@@ -21,6 +21,12 @@
             <artifactId>entity</artifactId>
         </dependency>
 
+        <!--服务层-->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>service</artifactId>
+        </dependency>
+
         <!--thymeleaf-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

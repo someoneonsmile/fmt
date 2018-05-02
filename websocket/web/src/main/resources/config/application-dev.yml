@@ -1,0 +1,14 @@
+
+spring:
+
+  # thymeleaf
+  thymeleaf:
+    cache: false
+
+  # 静态资源配置
+  resources:
+    chain:
+      # 启用缓存
+      cache: false
+
+

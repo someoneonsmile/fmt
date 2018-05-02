@@ -17,6 +17,7 @@
         <module>websocket-dependencies</module>
         <module>entity</module>
         <module>doc</module>
+        <module>service</module>
     </modules>
     <packaging>pom</packaging>
     <name>websocket</name>

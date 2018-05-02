@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
+/**
+ * 添加静态文件 MD5 版本号支持
+ */
 @ControllerAdvice
 public class ResourceUrlProviderController {
 

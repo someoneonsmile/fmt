@@ -16,6 +16,7 @@
     <!--版本号统一定义, 命名建议 "artifactId.version"-->
     <properties>
         <entity.version>0.0.1-SNAPSHOT</entity.version>
+        <service.version>0.0.1-SNAPSHOT</service.version>
         <fastjson.version>1.2.47</fastjson.version>
         <jquery.version>3.2.1</jquery.version>
         <sockjs-client.version>1.1.4</sockjs-client.version>
@@ -39,6 +40,13 @@
                 <groupId>com.example</groupId>
                 <artifactId>entity</artifactId>
                 <version>${entity.version}</version>
+            </dependency>
+
+            <!--服务层-->
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>service</artifactId>
+                <version>${service.version}</version>
             </dependency>
 
             <dependency>
