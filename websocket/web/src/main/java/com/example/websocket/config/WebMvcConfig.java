@@ -10,6 +10,8 @@ public class WebMvcConfig {
 
     /**
      * 添加跨域支持
+     * 全局 CORS 配置
+     * 结合细粒度的 @CrossOrigin 配置
      */
     @Bean
     public WebMvcConfigurer corsConfigurer() {

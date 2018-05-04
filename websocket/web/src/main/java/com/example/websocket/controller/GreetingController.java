@@ -22,6 +22,7 @@ public class GreetingController {
     @Resource
     private CustomProperties customProperties;
 
+
     @RequestMapping( {"/", "/index", "/main"} )
     @ResponseBody
     public void index() throws Exception {
@@ -61,6 +62,4 @@ public class GreetingController {
         // this.simpMessagingTemplate.convertAndSend("/topic/notice", value);
         return value;
     }
-
-
 }
