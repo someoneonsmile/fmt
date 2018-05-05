@@ -31,6 +31,9 @@
     <!--spring 日志-->
     <logger name="org.springframework" level="INFO"/>
 
+    <!--400 spring mvc 参数绑定-->
+    <logger name="org.springframework.validation" level="DEBUG" />
+
     <!--sql 日志-->
     <logger name="org.apache.ibatis" level="${SQL_LOG_LEVEL}"/>
     <logger name="java.sql" level="${SQL_LOG_LEVEL}"/>
