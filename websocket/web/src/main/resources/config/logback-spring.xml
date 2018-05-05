@@ -32,6 +32,7 @@
     <logger name="org.springframework" level="INFO"/>
 
     <!--400 spring mvc 参数绑定-->
+    <!--org.springframework.validation.BindException-->
     <logger name="org.springframework.validation" level="DEBUG" />
 
     <!--sql 日志-->
