@@ -30,23 +30,24 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Controller
-public class SSOController extends BaseController {
+public class SsoController extends BaseController {
 
     /**
      * 跳转登陆
      */
-    @RequestMapping("/toLogin")
-    public String toLogin(String requestUrl, Model model) {
+    @RequestMapping( "/toLogin" )
+    public String toLogin( String requestUrl, Model model ) {
         model.addAttribute("requestUrl", requestUrl);
         return "login";
     }
 
+
     /**
      * 登陆判断， 生成令牌， 携带授权码返回
      */
-    @RequestMapping("/login")
-    public String login(String name, String pwd, String callbackUrl, Model model) {
-        if (name != null) {
+    @RequestMapping( "/login" )
+    public String login( String name, String pwd, String callbackUrl, Model model ) {
+        if ( name != null ) {
             // 登陆成功
             session.setAttribute("isLogin", true);
             SysUser sysUser = new SysUser();
@@ -63,57 +64,58 @@ public class SSOController extends BaseController {
         }
     }
 
+
     /**
      * 获取授权码
      */
-    @RequestMapping("/getAuthCode")
-    public String getAuthCode(String callbackUrl) throws IOException {
+    @RequestMapping( "/getAuthCode" )
+    public String getAuthCode( String callbackUrl ) throws IOException {
         callbackUrl = URLDecoder.decode(callbackUrl, "UTF-8");
         String requestUrl = request.getRequestURL().toString();
-        boolean isLogin = (boolean) session.getAttribute("isLogin");
+        boolean isLogin = ( boolean ) session.getAttribute("isLogin");
         // 没有登陆，跳转到登陆( 会生成并分发授权码 )
-        if (!isLogin) {
+        if ( !isLogin ) {
             return "forward:/toLogin?requestUrl=" + callbackUrl;
         }
 
         // 已登陆，从缓存中取 authCode 没有时生成并保存
-        session.setMaxInactiveInterval((int) (userConfigure.getTokenTimeout() * 60 * 60));
+        session.setMaxInactiveInterval(( int ) ( userConfigure.getTokenTimeout() * 60 * 60 ));
         ValueOperations<Serializable, Object> opsForValue = redisTemplate.opsForValue();
-        String authCode = (String) opsForValue.get(userConfigure.getAuthCodePrefix() + callbackUrl);
-        if (authCode == null) {
+        String authCode = ( String ) opsForValue.get(userConfigure.getAuthCodePrefix() + callbackUrl);
+        if ( authCode == null ) {
             authCode = UUIDUtils.getUUID();
             opsForValue.set(userConfigure.getAuthCodePrefix() + requestUrl, authCode, userConfigure.getAuthCodeTimeout(), TimeUnit.MINUTES);
         }
         return "redirect:" + callbackUrl + "?authCode=" + authCode;
     }
 
+
     /**
      * 获取令牌
      */
-    public ResData<Map> getToken(String authCode) {
+    public ResData<Map> getToken( String authCode ) {
 
         String requestUrl = request.getRequestURL().toString();
         ValueOperations<Serializable, Object> ops = redisTemplate.opsForValue();
-        if (authCode == null || !authCode.equals(ops.get(userConfigure.getAuthCodePrefix() + requestUrl))) {
-            return ResData.custom(false, 500, "authCode 失效", null);
+        if ( authCode == null || !authCode.equals(ops.get(userConfigure.getAuthCodePrefix() + requestUrl)) ) {
+            return ResData.ofFail(500, "authCode 失效", null);
         }
         Map<String, Object> ret = new HashMap<>();
         String token = UUIDUtils.getUUID();
         ops.set(userConfigure.getTokenPrefix() + requestUrl, token, userConfigure.getTokenTimeout(), TimeUnit.HOURS);
         ret.put("token", token);
-        SysUser loginUser = (SysUser) session.getAttribute("loginUser");
+        SysUser loginUser = ( SysUser ) session.getAttribute("loginUser");
         ret.put("openId", loginUser.getId());
-        ResData<Map> success = ResData.success();
-        success.setData(ret);
-        return success;
+        return ResData.ofSuccess(ret);
     }
+
 
     /**
      * 检查令牌是否有效
      */
-    @RequestMapping("/checkToken")
+    @RequestMapping( "/checkToken" )
     @ResponseBody
-    public boolean checkToken(String token) {
+    public boolean checkToken( String token ) {
         /*
          *  && redisTemplate.<String>hasKey(token)
          *  && setOperations.isMember(userConfigure.getTokenPrefix() + token, requestURL);
@@ -123,15 +125,16 @@ public class SSOController extends BaseController {
         return token != null && token.equals(ops.get(userConfigure.getTokenPrefix() + requestUrl));
     }
 
+
     /**
      * 退出登陆
      */
-    @RequestMapping("/logout")
+    @RequestMapping( "/logout" )
     public boolean logout() throws InterruptedException {
-        List<String> servers = (List<String>) session.getAttribute(userConfigure.getTokenServersName());
-        if (servers != null) {
+        List<String> servers = ( List<String> ) session.getAttribute(userConfigure.getTokenServersName());
+        if ( servers != null ) {
             CountDownLatch countDownLatch = new CountDownLatch(servers.size());
-            for (String server : servers) {
+            for ( String server : servers ) {
                 new Thread(() -> {
                     CloseableHttpClient client = HttpClients.createMinimal();
                     HttpPost httpPost = new HttpPost(server + "/logout");
@@ -139,7 +142,7 @@ public class SSOController extends BaseController {
                         boolean reTry = true;
                         int maxReTry = 3;
                         // 失败重试
-                        for (int i = 0; reTry && i < maxReTry; i++) {
+                        for ( int i = 0; reTry && i < maxReTry; i++ ) {
                             CloseableHttpResponse execute = client.execute(httpPost);
                             HttpEntity entity = execute.getEntity();
                             String json = EntityUtils.toString(entity);
@@ -147,7 +150,7 @@ public class SSOController extends BaseController {
                             Boolean success = jsonObject.getBoolean("success");
                             reTry = success == null || !success;
                         }
-                    } catch (IOException e) {
+                    } catch ( IOException e ) {
                         e.printStackTrace();
                     }
                 }).start();
@@ -160,19 +163,18 @@ public class SSOController extends BaseController {
         return true;
     }
 
+
     /**
      * 获取用户信息
      */
-    @RequestMapping("/getUserInfo")
+    @RequestMapping( "/getUserInfo" )
     @ResponseBody
-    public ResData<SysUser> getUserInfo(String token) {
+    public ResData<SysUser> getUserInfo( String token ) {
         boolean b = checkToken(token);
-        if (b) {
-            SysUser loginUser = (SysUser) session.getAttribute("loginUser");
-            ResData<SysUser> success = ResData.success();
-            success.setData(loginUser);
-            return success;
+        if ( b ) {
+            SysUser loginUser = ( SysUser ) session.getAttribute("loginUser");
+            return ResData.ofSuccess(loginUser);
         }
-        return ResData.custom(false, 500, "token not effective!", null);
+        return ResData.ofFail(500, "token not effective!");
     }
 }

@@ -1,64 +1,101 @@
 package com.closer.ws.common;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * restful 返回对象
  */
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class ResData<T> {
 
     private boolean success;
+
     private int code;
+
     private String msg;
+
     private T data;
 
-    public static <E> ResData<E> success() {
-        return new ResData<>(true, 200, "", null);
-    }
-
-    public static <E> ResData<E> success(String msg) {
-        return new ResData<>(true, 200, msg, null);
-    }
-
-    public static <E> ResData<E> success(String msg, E data) {
-        return new ResData<>(true, 200, msg, data);
-    }
-
-    public static <E> ResData<E> fail() {
-        return new ResData<>(false, 500, "", null);
-    }
-
-    public static <E> ResData<E> fail(String msg) {
-        return new ResData<>(false, 500, msg, null);
-    }
-
-    public static <E> ResData<E> fail(String msg, E data) {
-        return new ResData<>(false, 500, msg, data);
-    }
-
-    public static <E> ResData<E> custom(boolean success, int code, String msg, E data) {
-        return new ResData<>(success, code, msg, data);
-    }
-
-    public static ResData singleSuccess() {
-        return InnerClass.success;
-    }
-
-    public static ResData singleFail() {
-        return InnerClass.fail;
-    }
+    private ResData(){}
 
     /**
-     * 静态内部类
+     * 成功(一般会返回数据)
+     */
+    public static <E> ResData<E> ofSuccess( E data ) {
+        return ResData.<E>builder().success(true).data(data).build();
+    }
+
+
+    public static <E> ResData<E> ofSuccess( String msg, E data ) {
+        return ResData.<E>builder().success(true).msg(msg).data(data).build();
+    }
+
+
+    public static <E> ResData<E> ofSuccess( int code, E data ) {
+        return ResData.<E>builder().success(true).code(code).data(data).build();
+    }
+
+
+    public static <E> ResData<E> ofSuccess( int code, String msg, E data ) {
+        return ResData.<E>builder().success(true).code(code).msg(msg).data(data).build();
+    }
+
+
+    /**
+     * 失败(一般会有提示/错误码)
+     */
+    public static <E> ResData<E> ofFail( int code ) {
+        return ResData.<E>builder().success(false).code(code).build();
+    }
+
+
+    /**
+     * 失败(一般会有提示/错误码)
+     */
+    public static <E> ResData<E> ofFail( String msg ) {
+        return ResData.<E>builder().success(false).msg(msg).build();
+    }
+
+
+    public static <E> ResData<E> ofFail( int code, String msg ) {
+        return ResData.<E>builder().success(false).code(code).msg(msg).build();
+    }
+
+
+    public static <E> ResData<E> ofFail( int code, E data ) {
+        return ResData.<E>builder().success(false).code(code).data(data).build();
+    }
+
+
+    public static <E> ResData<E> ofFail( String msg, E data ) {
+        return ResData.<E>builder().success(false).msg(msg).data(data).build();
+    }
+
+
+    public static <E> ResData<E> ofFail( int code, String msg, E data ) {
+        return ResData.<E>builder().success(false).code(code).msg(msg).data(data).build();
+    }
+
+
+    public static ResData defaultSuccess() {
+        return InnerClass.SUCCESS;
+    }
+
+
+    public static ResData defaultFail() {
+        return InnerClass.FAIL;
+    }
+
+
+    /**
+     * 延迟加载类
      */
     private static class InnerClass {
-        private static final ResData success = new ResData<>(true, 200, "成功", null);
-        private static final ResData fail = new ResData<>(false, 500, "服务繁忙", null);
+
+        private static final ResData SUCCESS = ResData.builder().success(true).build();
+
+        private static final ResData FAIL = ResData.builder().success(false).code(500).msg("服务异常").build();
     }
 }
