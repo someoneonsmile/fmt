@@ -15,6 +15,7 @@ public class FileApplication implements WebMvcConfigurer {
         SpringApplication.run(FileApplication.class, args);
     }
 
+
     @Override
     public void addArgumentResolvers( List<HandlerMethodArgumentResolver> argumentResolvers ) {
         argumentResolvers.add(new FileArgumentResolver());

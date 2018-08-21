@@ -1,6 +1,8 @@
 package com.example.file.resolver;
 
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.MethodParameter;
@@ -18,11 +20,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.MultipartResolutionDelegate;
 import org.springframework.web.util.WebUtils;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -42,11 +46,11 @@ public class FileArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument( MethodParameter parameter, ModelAndViewContainer mavContainer,
                                    NativeWebRequest webRequest, WebDataBinderFactory binderFactory ) throws Exception {
-        boolean isMultipart = MultipartResolutionDelegate.isMultipartRequest(webRequest.getNativeRequest(HttpServletRequest.class));
+        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+        boolean isMultipart = MultipartResolutionDelegate.isMultipartRequest(servletRequest);
         if ( !isMultipart ) {
             return null;
         }
-        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(servletRequest, MultipartHttpServletRequest.class);
 
         String name = parameter.getParameterAnnotation(Upload.class).value();
@@ -55,28 +59,28 @@ public class FileArgumentResolver implements HandlerMethodArgumentResolver {
         List<MultipartFile> files = multipartRequest.getFiles(name);
         Object result = files.stream().map(( file ) -> {
             File dir = new File(path);
-            if ( !dir.exists() ) {
-                dir.mkdirs();
-            }
+            String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+            String fileName = UUID.randomUUID().toString().replace("-", "") + ext;
             try {
-                file.transferTo(new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename()));
+                if ( !dir.exists() ) {
+                    boolean mkdirs = dir.mkdirs();
+                }
+                Thumbnails.of(ImageIO.read(file.getInputStream())).scale(1.0).outputQuality(0.8).toFile(path + fileName);
             } catch ( IOException e ) {
                 log.error(file.getOriginalFilename() + ": 上传失败", e);
             }
-            return path + file.getOriginalFilename();
+            return path + fileName;
         }).collect(Collectors.toList());
 
-        if ( binderFactory != null ) {
-            WebDataBinder binder = binderFactory.createBinder(webRequest, null, name);
-            try {
-                result = binder.convertIfNecessary(result, parameter.getParameterType(), parameter);
-            } catch ( ConversionNotSupportedException ex ) {
-                throw new MethodArgumentConversionNotSupportedException(result, ex.getRequiredType(),
-                    name, parameter, ex.getCause());
-            } catch ( TypeMismatchException ex ) {
-                throw new MethodArgumentTypeMismatchException(result, ex.getRequiredType(),
-                    name, parameter, ex.getCause());
-            }
+        WebDataBinder binder = binderFactory.createBinder(webRequest, null, name);
+        try {
+            result = binder.convertIfNecessary(result, parameter.getParameterType(), parameter);
+        } catch ( ConversionNotSupportedException ex ) {
+            throw new MethodArgumentConversionNotSupportedException(result, ex.getRequiredType(),
+                name, parameter, ex.getCause());
+        } catch ( TypeMismatchException ex ) {
+            throw new MethodArgumentTypeMismatchException(result, ex.getRequiredType(),
+                name, parameter, ex.getCause());
         }
         return result;
     }
